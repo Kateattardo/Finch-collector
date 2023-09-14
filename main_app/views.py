@@ -52,3 +52,21 @@ class FinchUpdate(UpdateView):
 class FinchDelete(DeleteView):
   model = Finch
   success_url = '/finchs'
+
+# # ToyList
+# class ToyList(ListView):
+#     model = Toy
+#     template_name = 'toys/index.html'
+
+# # ToyDetail
+# class ToyDetail(DetailView):
+#     model = Toy
+#     template_name = 'toys/detail.html'
+
+# # ToyCreate
+# class ToyCreate(CreateView):
+#     model = Toy
+#     fields = ['name', 'color']
+
+#     def form_valid(self, form):
+#         return super().form_valid(form)
