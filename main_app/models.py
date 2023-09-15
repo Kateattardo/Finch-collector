@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 
 # A tuple of 2-tuples
 MEALS = (
@@ -40,21 +41,6 @@ class Finch(models.Model):
 
 
 # Create your models here.
-class Finch(models.Model):
-    name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=100)
-    description = models.TextField(max_length=250)
-  
-
-    def __str__(self):
-        return f'{self.name} ({self.id})'
-    
-    # this is used for redirects from class based views
-    def get_absolute_url(self):
-        return reverse('detail', kwargs={'finch_id': self.id})
-
-    
-
 
 class Feeding(models.Model):
   date = models.DateField('feeding date')

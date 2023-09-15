@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
+# we need to import our class based views
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.edit import ListView
+from django.views.generic.import ListView
 from django.views.generic.detail import DetailView
 
 from .models import Finch, Toy
@@ -29,9 +30,8 @@ def finchs_detail(request, finch_id):
     finch = Finch.objects.get(id=finch_id)
     feeding_form = FeedingForm()
     id_list = finch.toys.all().values_list('id')
+    toys_finch_doesnt_have = Toy.objects.exclude(id__in=id_list)
     return render(request, 'finchs/detail.html', { 'finch': finch, 'feeding_form': feeding_form, 'toys': toys_finch_doesnt_have })
-  
-    return render(request, 'finches/detail.html', { 'finch': finch})
     return redirect('detail', finch_id=finch_id)
 
 def add_feeding(request, finch_id):
