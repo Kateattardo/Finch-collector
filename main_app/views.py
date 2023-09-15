@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Finch
+from django.views.generic.edit import ListView
+from django.views.generic.detail import DetailView
+
+from .models import Finch, Toy
 from .forms import FeedingForm
 
 finchs = [
@@ -25,9 +28,8 @@ def finchs_index(request):
 def finchs_detail(request, finch_id):
     finch = Finch.objects.get(id=finch_id)
     feeding_form = FeedingForm()
-    return render(request, 'finchs/detail.html', {
-    'finch': finch, 'feeding_form': feeding_form
-  })
+    id_list = finch.toys.all().values_list('id')
+    return render(request, 'finchs/detail.html', { 'finch': finch, 'feeding_form': feeding_form, 'toys': toys_finch_doesnt_have })
   
     return render(request, 'finches/detail.html', { 'finch': finch})
     return redirect('detail', finch_id=finch_id)
@@ -42,31 +44,55 @@ def add_feeding(request, finch_id):
 
 class FinchCreate(CreateView):
   model = Finch
-  fields = '__all__'
+  # fields = '__all__'
+  fields = ['name', 'breed', 'description', 'age']
   success_url = '/finchs/{finch_id}'
 
 class FinchUpdate(UpdateView):
   model = Finch
-  fields = ['breed', 'description',]
+  fields = ['breed', 'description','age']
 
 class FinchDelete(DeleteView):
   model = Finch
   success_url = '/finchs'
 
+#Views for Toys
+
 # # ToyList
-# class ToyList(ListView):
-#     model = Toy
-#     template_name = 'toys/index.html'
+class ToyList(ListView):
+    model = Toy
+    template_name = 'toys/index.html'
 
 # # ToyDetail
-# class ToyDetail(DetailView):
-#     model = Toy
-#     template_name = 'toys/detail.html'
+class ToyDetail(DetailView):
+    model = Toy
+    template_name = 'toys/detail.html'
 
 # # ToyCreate
-# class ToyCreate(CreateView):
-#     model = Toy
-#     fields = ['name', 'color']
+class ToyCreate(CreateView):
+    model = Toy
+    fields = ['name', 'color']
 
-#     def form_valid(self, form):
-#         return super().form_valid(form)
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+# ToyUpdate
+class ToyUpdate(UpdateView):
+    model = Toy
+    fields = ['name', 'color']
+
+# ToyDelete
+class ToyDelete(DeleteView):
+    model = Toy
+    success_url = '/toys/'
+
+# adds toy to finch
+def assoc_toy(request, finch_id, toy_id):
+    # to make the association, we target the cat and pass the toy id
+    Finch.objects.get(id=finch_id).toys.add(toy_id)
+    return redirect('detail', finch_id=finch_id)
+# removes toy from finch
+def unassoc_toy(request, finch_id, toy_id):
+    # to make the association, we target the finch and pass the toy id
+    Finch.objects.get(id=finch_id).toys.remove(toy_id)
+    
