@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('breed', models.CharField(max_length=100)),
                 ('description', models.TextField(max_length=250)),
+                ('age',models.IntegerField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
